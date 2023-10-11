@@ -5,17 +5,17 @@
 1. cat /etc/passwd | grep -v /bin/bash$
 -v : исключает из поиска строки, содержищие шаблон
 $  : символ, определяющий позицию шаблона в конце строки текста
-2. netstat -tapln | grep "LISTEN"
-3. grep -ir an sample.txt
+3. netstat -tapln | grep "LISTEN"
+4. grep -ir an sample.txt
 -ir : ишет заданый шаблон без учета регистра
-4. grep -w do sample2.txt
+5. grep -w do sample2.txt
 -w : ищет заданный шаблон с учетом регистра
-5. grep -ir he sample2.txt
+6. grep -ir he sample2.txt
 grep -w World sample2.txt
 grep -w Hi sample2.txt
-6. grep /акг
+7. grep /акг
 
-7. grep t -m 2 sample.txt
+8. grep t -m 2 sample.txt
 -m 2 : отображает первые две строки с искомым шаблоном
 
 

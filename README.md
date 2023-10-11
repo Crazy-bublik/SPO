@@ -24,7 +24,9 @@ grep -w World sample2.txt
 
 grep -w Hi sample2.txt
 
-### 6. grep /акг
+### 6. grep '\fruit\\[5\]' code.txt
+
+grep  '\fruit\\[5\\]' code.txt : отобразит строку содержащюю fruit[<номер по списку>\]
 
 ### 7. grep t -m 2 sample.txt
 

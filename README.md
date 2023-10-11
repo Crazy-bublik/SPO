@@ -3,6 +3,7 @@
 # grep_task
 
 1. cat /etc/passwd | grep -v /bin/bash$
+
 -v : исключает из поиска строки, содержищие шаблон
 $  : символ, определяющий позицию шаблона в конце строки текста
 3. netstat -tapln | grep "LISTEN"

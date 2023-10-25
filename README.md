@@ -20,11 +20,9 @@ $  : символ, определяющий позицию шаблона в к�
 
 ### 5. grep -ir he sample2.txt
 
-grep -w World sample2.txt
+grep -w World sample2.txt | grep -w Hi sample2.txt
 
-grep -w Hi sample2.txt
-
-### 6. grep '\fruit\\[5\]' code.txt
+### 6. grep '/fruit\\[5\\]/' code.txt
 
 grep  '\fruit\\[5\\]' code.txt : отобразит строку содержащюю fruit[<номер по списку>\]
 

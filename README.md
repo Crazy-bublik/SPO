@@ -83,35 +83,104 @@ $1~/^C/ || $1~/^E/ : в начале буква C или буква E
 $2~/^\(916)/ : столбец 2 начинается с (916)
 
 
+# Сеть
 
 ### 1.
+Создаем файл с расширением .yaml
+sudo nano 01-config.yaml
+Внутри файла прописываем:
+'''
+  network:
+    ethernets:
+      enp0s0:
+         addresses:
+          - 192.168.43.187/24
+         gateway4: 192.168.43.1
+         nameservers:
+           addresses:
+             - 0.0.0.0
+    version: 2
+'''
+Копируем файл в директорию /etc/netplan:
+cp ~/01-config.yaml /etc/netplan
+Запускаем применение новой конфигурации:
+sudo netplane apply
+
+### 2.
+Запускаем ping и проверяем доступность: 
+ping ya.ru
+
+### 3.
+
+sudo tcpdump -i enp0s0 icmp -s0 -n | grep echo requesr
+tcpdump : команда используется для захвата и анализа сетевого трафика
+-i : параметр указывает на сетевой интерфейс, через который следует захватывать пакеты
+-s0 : указывает, что необходимо захватывать и фнфлизировать все содержимое пакетов(0 сохраняет все данные пакетов для последующего анализа)
+-n : адреса выводятся в числовом формате
+### 4.
+Проверяем доступность основных портов:
+nc -vz ya.ru 80 443
+nc -vz habr.com 80 443
+nc -vz google.com 80 443
+nc : команда для чтения и записи данных через сетевые соединения
+-v : указывает на вывод более подробной информации о ходе выполнения команды
+-z : указывает на проверку только открытого порта, без передачи данных
+### 5.
+sudo tcpdump -w sqlc.pcap
+-w : указывает записать весь захватываемый трафик в файл sqlc.pcap
+
+# Права и группы 
+
+### 1.
+
 sudo useradd -m -G group1 -s /bin/bash user1
+
 sudo userdel -r user1
 
 ### 2.
+
 sudo groupadd group1
+
 sudo useradd -m -G group1 -s /bin/bash user1
+
 sudo useradd -m -G group1 -s /bin/bash user2
+
 sudo groupadd group2
+
 sudo useradd -m -G group2 -s /bin/bash user3
+
 sudo usermod -G group1 user3
+
 sudo deluser user3 group1
 
 ### 3.
+
 sudo visudo
+
 user1 ALL=(ALL) NOPASSWD: ALL
 
 ### 4.
+
 touch exemple.txt
+
 chmod u=rw,g=rw,o=r exemple.txt
+
 touch exemple
+
 chmod 600 exemple
 
 ### 5.
+
 sudo groupadd developer
+
 sudo useradd -m -G developer -s /bin/bash user1
+
 sudo useradd -m -G developer -s /bin/bash user2
+
 sudo mkdir dir_test
+
 sudo chgrp developer dir_test/
+
 sudo chmod g+rwx dir_test/
+
 sudo chmod g+s dir_test/

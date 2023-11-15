@@ -84,4 +84,34 @@ $2~/^\(916)/ : столбец 2 начинается с (916)
 
 
 
+### 1.
+sudo useradd -m -G group1 -s /bin/bash user1
+sudo userdel -r user1
 
+### 2.
+sudo groupadd group1
+sudo useradd -m -G group1 -s /bin/bash user1
+sudo useradd -m -G group1 -s /bin/bash user2
+sudo groupadd group2
+sudo useradd -m -G group2 -s /bin/bash user3
+sudo usermod -G group1 user3
+sudo deluser user3 group1
+
+### 3.
+sudo visudo
+user1 ALL=(ALL) NOPASSWD: ALL
+
+### 4.
+touch exemple.txt
+chmod u=rw,g=rw,o=r exemple.txt
+touch exemple
+chmod 600 exemple
+
+### 5.
+sudo groupadd developer
+sudo useradd -m -G developer -s /bin/bash user1
+sudo useradd -m -G developer -s /bin/bash user2
+sudo mkdir dir_test
+sudo chgrp developer dir_test/
+sudo chmod g+rwx dir_test/
+sudo chmod g+s dir_test/

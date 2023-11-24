@@ -221,3 +221,24 @@ sudo chgrp developer dir_test/
 sudo chmod g+rwx dir_test/
 
 sudo chmod g+s dir_test/
+
+
+# WEB/TFTP
+
+### 1.
+
+sudo apt update
+
+sudo apt install tftpd-hpa
+
+sudo nano /etc/default/tftpd-hpa
+
+внутри файла добавляем --create опцию, так как без неё на сервер невозможно будет загружать новые файлы: TFTP_OPTIONS="--secure --create"
+
+
+
+
+### 2.
+
+
+

@@ -235,8 +235,17 @@ sudo nano /etc/default/tftpd-hpa
 
 внутри файла добавляем --create опцию, так как без неё на сервер невозможно будет загружать новые файлы: TFTP_OPTIONS="--secure --create"
 
+sudo chown tftp:tftp /srv/tftp/ : Меняем владельца и группу папки
 
+sudo systemctl restart tftpd-hpa.service
 
+tftp 192.168.43.187 : запускаем клиентскую программу tftp сервера
+
+tftp> get tftp_data : Скачивает файл с сервера tftp
+
+tftp> put local_data : Загружает файл на сервер tftp
+
+tftp> quit
 
 ### 2.
 

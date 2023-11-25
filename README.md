@@ -249,5 +249,47 @@ tftp> quit
 
 ### 2.
 
+sudo apt update
+
+sudo apt install nginx
+
+cd /srv/
+
+sudo mkdir www
+
+cd www
+
+sudo nano main
+
+sudo mkdir conf
+
+cd conf
+
+sudo nano main.cfg
+
+sudo nano nginx.conf
+
+Меняем файл:
+'''
+events {}
+http {
+    server {
+        listen 80;
+        server_name 192.168.43.187;
+         location /main {
+            root /srv/www;
+        }
+         location /main.cfg {
+            root /srv/www/conf;
+        }
+    }
+}
+'''
+
+sudo systemctl reload nginx.conf
+
+wget http://192.168.43.187/main
+
+wget http://192.168.43.187/main.cfg
 
 

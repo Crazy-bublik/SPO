@@ -407,3 +407,229 @@ wget http://192.168.43.187/main
 wget http://192.168.43.187/main.cfg
 
 
+# First_Bash
+
+### 1.
+
+sudo nano file1.sh
+```
+#!/bin/bash
+
+number=$1
+if [ $((number%2)) -eq 0 ]
+then
+  echo "Четное"
+else
+  echo "Нечетное"
+fi
+```
+sudo chmod +x file1.sh
+
+./file1.sh 3
+
+### 2.
+```
+
+#!/bin/bash
+
+check_divisibility() {
+    n=$1
+    x=$2
+    y=$3
+    if [ $((n%x)) -eq 0 ] && [ $((n%y)) -eq 0 ]
+    then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+check_divisibility $1 $2 $3
+```
+
+
+# Bash (Task_1)
+### 1.
+```
+#!/bin/bash
+
+file="copy.txt"
+info=$(ls -la "$file")
+echo "$info"
+```
+### 2.
+```
+#!/bin/bash
+
+echo "Number:"
+read num
+for ((i=1;i<=num;i++))
+do
+  for ((j=1;j<=i;j++))
+  do
+    echo -n "$j "
+  done
+  echo ""
+done
+```
+### 3.
+```
+#!/bin/bash
+
+echo "Number:"
+read num
+count=1
+for ((i=1;i<=num;i++))
+do
+  for ((j=1;j<=i;j++))
+  do
+    echo -n "$count "
+    ((count++))
+  done
+  echo ""
+done
+```
+### 4.
+```
+#!/bin/bash
+
+echo "Year:"
+read year
+if [ $(( year % 4 )) -eq 0 && $(( year % 100 )) -ne 0 ] || [ $(( year % 400)) -eq 0 ];
+then
+  echo "Year $year is high-grade"
+else
+  echo "Year $year is not high-grade"
+fi
+```
+### 5.
+```
+#!/bin/bash
+
+echo "Number:"
+read num
+for ((i=1;i<=num;i++))
+do
+  for ((j=1;j<=num;j++))
+  do
+    if (( (i+j)%2 == 0)); then
+      echo -e -n "\e[40m" " "
+    else
+      echo -e -n "\e[47m" " "
+    fi
+  done
+  echo -e "\e[0m" " "
+done
+```
+-e : это опция команды `echo` для интерпретации escape-последовательностей
+
+-n : это опция команды `echo` для подавления добавления символа новой строки в конце выводимой строки. Это позволяет выводить текст без добавления перевода строки на следующую строку
+
+### 6.
+```
+#!/bin/bash
+
+addLetters() {
+  if [ "$#" -eq 0 ]; then
+    echo 'z'
+    return
+  fi
+  sum=0
+  for letter in "$@"
+  do
+    total=$(printf "%d" "'$letter")
+    sum=$((sum + total - 96))
+  done
+  sum=$(( (sum - 1) % 26 + 1))
+  result=$(printf \\$(printf '%03o' $((sum + 96))))
+  echo "$result"
+}
+
+addLetters "$@"
+```
+printf "%d" : преобразует аргумент в числовое значение, используя таблицу ASCII
+
+printf '%03o' : преобразует новое числовое значение обратно в символ алфавита
+
+### 7.
+```
+#!/bin/bash
+
+is_valid_ipv4() {
+    local ip="$1"
+    local regex="^([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+
+    if [[ $ip =~ $regex ]]; then
+        echo "Действительный IPv4 адрес"
+    else
+        echo "Недействительный IPv4 адрес"
+    fi
+}
+
+ip_address=$1
+is_valid_ipv4 "$ip_address"
+```
+
+
+# Bash (Task_2)
+### 1.
+```
+#!/bin/bash
+
+echo "Введите число:"
+read num
+total=0
+for ((i=1;i<=$num;i++))
+do
+  total=$((total + i))
+done
+echo "Сумма чисел от 1 до $num равна $total"
+```
+### 2.
+```
+#!/bin/bash
+
+s1="xyaabbbccccdefww"
+s2="xxxxyyyyabklmopq"
+combined=$(echo -e "$s1\n$s2" | grep -o . | sort -u | tr -d '\n')
+echo "Результат: $combined"
+```
+grep -o . : выбирает каждый символ отдельно (каждый символ с новой строки)
+
+sort -u : сортирует символы и удаляет повторяющиеся
+
+tr -d '\n' : удаляет символы новой строки
+
+### 3.
+```
+#!/bin/bash
+read s
+s_upper=$(echo $s | tr '[:lower:]' '[:upper:]')
+IFS=';' read -ra guests <<< "$s_upper"
+names=()
+last_names=()
+for guest in "${guests[@]}"
+do
+  IFS=':' read -r name last_name <<< "$guest"
+  names+=("$name")
+  last_names+=("$last_name")
+done
+sorted_guests=()
+for i in "${!last_names[@]}"
+do
+  sorted_guests+=("${last_names[$i]},${names[$i]}")
+done
+sorted_guests=($(printf "%s\n" "${sorted_guests[@]}" | sort))
+```
+tr '[:lower:]' '[:upper:]' : преобразование строки в верхний регистр
+
+-r : это опция read для отключения обратного слэша (Backslash) в строке. Это используется для чтения данных так, как они есть, без интерпретации специальных символов
+
+-a : это опция read для чтения слов в массив, где каждое слово разделено пробелом
+
+
+
+
+
+
+

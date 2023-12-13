@@ -628,6 +628,137 @@ tr '[:lower:]' '[:upper:]' : преобразование строки в вер
 -a : это опция read для чтения слов в массив, где каждое слово разделено пробелом
 
 
+# РК со SPO
+### 1.
+Задача №1. Зачастую, при взломе систем, хакеры удаляют все логи попыток зайти в систему. Напишите скрипт мониторинга лога, используя утилиту tail -f, чтобы он выводил сообщения при попытке неудачной аутентификации пользователя /var/log/auth.log в отдельный файл, отслеживая сообщения примерно такого вида:
+May 16 19:45:52 vlamp login[102782]: FAILED LOGIN (1) on '/dev/tty3' FOR 'user', Authentication failure
+Invallid USER итд
+
+(Предварительно попробуйте подключиться по ssh, чтобы в логах были записи.)
+
+Проверить скрипт, выполнив ошибочную регистрацию с виртуального терминала.
+```
+#!/bin/bash
+
+file_log="/var/log/auth.log"
+file_output="/home/masha/scripts/output.log"
+tail -f $file_log | while read line
+do
+  if echo $line | grep -q "authentication failure"; then
+    echo $line >> $file_output
+  fi
+done
+```
+### 2.
+Задача №2. Создать юнит нового процесса, который при старте будет запускть скрипт из п.1. Сделать так, чтобы команда запускалась сразу при старте операционной системы. Запустить сервис с помощью systemctl, отследить pid процесса, остановить процесс с помощью сигналов в top.
+```
+[Unit]
+Description=FAIL LOGIN
+network.target
+
+[Service]
+ExecStart=/home/masha/scripts/pk_1.sh
+Restart = always
+
+[Install]
+WantedBy=multi-user.target
+```
+### 3.
+Задача №3. Также хакеры иногда создают файлы и затем зачищают следы и удаляю их. Напишите скрипт, который отслеживает создание и удаление файлов в директории /home и создает файл вида:
+
+'+ /home/roman/file1
+'+ /home/vasya/filefile
+'+ /home/testfile
+'- /home/vasya/badfile
+'- /home/roman/badfile
+'+ /home/addfile
+
+где "+" это добавленные файлы "-" это удаленные файлы
+
+(Т.е. при перед первым запуском скрипта надо считать все файлы и принять этот список за "эталонное состояние", а затем при последующем запуске скрипта он мониторит добавление или удаление и пишет в отдельный файлик как выше, команда diff в помощь)
+```
+#!/bin/bash
+
+find /home/masha -type f | sort > current.txt
+diff etalon.txt current.txt > changes.txt
+
+while IFS= read -r line; do
+  case $line in
+    "< "*) echo "- ${line:2}" ;;
+    "> "*) echo "+ ${line:2}" ;;
+  esac
+done < changes.txt
+
+cp current.txt etalon.txt
+```
+### 4.
+Задача №4.
+Зачастую при помощи скриптов необходимо собирать служебную информацию и прочее. При этом её хранят либо на удаленном сервере, либо на локальном. Используя CRON напишите скрипт который будет создавать файл в каталоге в домашней директории формата 2022-12-20.txt (см. datetime). Через 5 минут проверяем, чтобы в директории было столько же файлов, сколько прошло минут. Также используя find делаем так, чтобы директория проверялась раз в 5 минут и удаляла файлы, созданные больше, чем 10 минут назад.
+```
+#!/bin/bash
+
+date=$(date +"%Y-%m-%d_%H-%M-%S")
+directory="/home/masha/data_test"
+filename="$directory/$date.txt"
+touch $filename
+
+minutes=$(date +"%M" --date="5 minutes ago")
+files_in_directory=$(find "$directory" -maxdepth 1 -type f | wc -l)
+
+find $directory -type f -mmin +10 -delete
+
+if [ 10 -eq "$files_in_directory" ]; then
+    echo "Количество файлов в директории $files_in_directory совпадает с прошед>
+else
+    echo "Количество файлов в директории $files_in_directory не  совпадает с пр>
+fi
+```
+### 5.
+Задача №5.
+Написать командный файл, обеспечивающий поиск и вывод на печать имен всех файлов с одинаковым содержимым. Поиск файлов производится во всех подкаталогах заданного каталога.
+```
+#!/bin/bash
+
+echo "Введите путь к каталогу"
+read search_dir
+find $search_dir -type f | while read file1;
+do
+  find $search_dir -type f | while read file2; do
+   if [ "$file1" != "$file2" ]; then
+     if diff "$file1" "$file2" &> /dev/null; then
+       echo "Файлы $file1 и $file2 имеют одинаковое содержимое"
+     fi
+   fi
+  done
+done
+```
+### 6.
+Задача №6.
+Написать командный файл, выводящий данные о числе файлов во всех подкаталогах заданного каталога.
+```
+#!/bin/bash
+
+function count_files_in_directory {
+  local directory=$1
+  local file_count=$(find "$directory" -type f | wc -l)
+  echo "Количество файлов в каталоге $directory: $file_count"
+
+  local subdirectories=$(find "$directory" -mindepth 1 -type d)
+  for subdirectory in $subdirectories
+  do
+    count_files_in_directory "$subdirectory"
+  done
+}
+
+if [ -z "$1" ]
+then
+  echo "Использование: $0 <каталог>"
+  exit 1
+fi
+
+count_files_in_directory "$1"
+```
+
 
 
 

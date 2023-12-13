@@ -384,7 +384,7 @@ sudo nano main.cfg
 sudo nano nginx.conf
 
 Меняем файл:
-'''
+```
 events {}
 http {
     server {
@@ -398,7 +398,7 @@ http {
         }
     }
 }
-'''
+```
 
 sudo systemctl reload nginx.conf
 

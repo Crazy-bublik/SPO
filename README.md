@@ -739,8 +739,8 @@ done
 #!/bin/bash
 
 function count_files_in_directory {
-  local directory=$1
-  local file_count=$(find "$directory" -type f | wc -l)
+  directory=$1
+  file_count=$(find "$directory" -type f | wc -l)
   echo "Количество файлов в каталоге $directory: $file_count"
 
   local subdirectories=$(find "$directory" -mindepth 1 -type d)

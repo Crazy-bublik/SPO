@@ -407,6 +407,91 @@ wget http://192.168.43.187/main
 wget http://192.168.43.187/main.cfg
 
 
+# Ivm
+### 1.
+sudo parted /dev/sdb
+
+mklabel gpt
+
+mkpart (0 150)
+
+mkpart (150 300)
+
+print
+
+quit
+
+lsblk
+
+sudo mkfs.ext4 /dev/sdb1
+
+sudo mkdir /mnt/ext4
+
+sudo mount /dev/sdb1 /mnt/ext4
+
+sudo nano /etc/fstab
+
+/dev/sdb1 /mnt/ext4 ext4 defaults 0 0
+### 2.
+
+pvcreate /dev/sdb2
+
+ sudo vgcreate vg /dev/sdb2
+
+ sudo lvcreate -n lv -L 100M vg
+
+  sudo mkfs.xfs /dev/vg/lv
+
+ sudo mkdir /mnt/xfs
+
+sudo mount /dev/vg/lv /mnt/xfs
+
+lsblk
+
+
+
+### 3.
+sudo touch /mnt/ext4/file1
+
+echo "hellow world" > /mnt/ext4/file1
+
+cp /mnt/ext4/file1 /mnt/ext4/file2
+
+ln -s /mnt/ext4/file1 /mnt/ext4/file3
+
+ln /mnt/ext4/file1 /mnt/ext4/file4
+
+ls -i /mnt/ext4/
+
+12 file1  13 file2  14 file3  12 file4  11 lost+found
+
+ls -i /mnt/ext4/file*
+
+12 /mnt/ext4/file1  13 /mnt/ext4/file2  14 /mnt/ext4/file3  12 /mnt/ext4/file4
+
+rm /mnt/ext4/file1
+
+cat /mnt/ext4/file2
+
+hellow world
+
+cat /mnt/ext4/file3
+
+cat: /mnt/ext4/file3: No such file or directory
+
+cat /mnt/ext4/file4
+
+ ls -li
+### 4.
+ln -s /mnt/ext4/file4 /mnt/xfs/lin
+
+ls -l /mnt/xfs/lin
+
+lrwxrwxrwx 1 root root 15 Dec 27 14:41 /mnt/xfs/lin -> /mnt/ext4/file4
+
+
+
+
 # First_Bash
 
 ### 1.
